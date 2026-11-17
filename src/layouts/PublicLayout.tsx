@@ -8,7 +8,7 @@ import { ModalDialog } from '../components/common/ModalDialog';
 import { formatSchoolDate } from '../utils/bsDate';
 
 export const PublicLayout: React.FC = () => {
-  const { config, language, setLanguage, calendarMode, setCalendarMode, notices, teachers, events, resetDemoData } =
+  const { config, language, setLanguage, calendarMode, setCalendarMode, notices, teachers, events } =
     useSchoolStore();
   const t = TRANSLATIONS[language];
   const location = useLocation();
@@ -321,7 +321,7 @@ export const PublicLayout: React.FC = () => {
 
           <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-slate-300">
             <p>
-              {config.schoolName} · {config.academicYearBS} ({config.academicYearAD}) · Frontend demonstration using fictional sample records.
+              {config.schoolName} · {config.academicYearBS} ({config.academicYearAD})
             </p>
             <div className="flex items-center gap-4">
               <button
@@ -330,13 +330,6 @@ export const PublicLayout: React.FC = () => {
                 className="hover:text-white underline underline-offset-4"
               >
                 Search Site
-              </button>
-              <button
-                type="button"
-                onClick={resetDemoData}
-                className="hover:text-white underline underline-offset-4"
-              >
-                Reset Demo Data
               </button>
             </div>
           </div>

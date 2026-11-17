@@ -26,7 +26,7 @@ export const ParentResultsPage: React.FC = () => {
             {child?.name} · Academic Results
           </h2>
           <p className="text-xs text-slate-500">
-            {child ? getClassLabel(state, child.classId) : ''} · Sample examination records
+            {child ? getClassLabel(state, child.classId) : ''} · Examination records
           </p>
         </div>
 
@@ -77,7 +77,7 @@ export const ParentResultsPage: React.FC = () => {
           </div>
         </div>
         <div className="bg-white border border-slate-200 rounded-xl p-4">
-          <div className="text-xs text-slate-500">Sample GPA</div>
+          <div className="text-xs text-slate-500">GPA</div>
           <div className="font-display text-2xl font-bold text-slate-900 tabular-nums mt-1">
             {summary.gpa}
           </div>

@@ -21,7 +21,7 @@ export const ParentChildrenPage: React.FC = () => {
         <div>
           <h2 className="font-display text-lg font-bold text-slate-900">Linked Children</h2>
           <p className="text-xs text-slate-500">
-            Select a fictional child profile to inspect their attendance, marks, and homework across the Parent Portal.
+            Select a linked child profile to inspect their attendance, marks, and homework across the Parent Portal.
           </p>
         </div>
 
@@ -69,7 +69,7 @@ export const ParentChildrenPage: React.FC = () => {
             Approved Faculty Contacts ({selectedChild?.name})
           </h2>
           <p className="text-xs text-slate-500">
-            School-approved sample contact channels for {selectedChild ? getClassLabel(state, selectedChild.classId) : ''}.
+            School-approved faculty contact channels for {selectedChild ? getClassLabel(state, selectedChild.classId) : ''}.
           </p>
         </div>
 

@@ -94,7 +94,7 @@ export const TeacherAssignmentsPage: React.FC = () => {
       resourceType: matType,
       uploadedDate: '2026-11-17',
       fileSize: '340 KB',
-      summary: matSummary.trim() || 'Sample study resource added in teacher demo portal.',
+      summary: matSummary.trim() || 'Study resource shared by subject teacher.',
     });
     setMatTitle('');
     setMatSummary('');
@@ -108,7 +108,7 @@ export const TeacherAssignmentsPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 className="font-display text-lg font-bold text-slate-900">Homework Assignments</h2>
-            <p className="text-xs text-slate-500">Create, edit, or delete demo class assignments</p>
+            <p className="text-xs text-slate-500">Create, edit, or delete class assignments</p>
           </div>
           <button
             type="button"
@@ -203,7 +203,7 @@ export const TeacherAssignmentsPage: React.FC = () => {
       <ModalDialog
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editing ? 'Edit Assignment' : 'Create Demo Assignment'}
+        title={editing ? 'Edit Assignment' : 'Create Assignment'}
       >
         <form onSubmit={handleSave} className="space-y-4">
           {formError && <p className="text-xs text-red-600">{formError}</p>}

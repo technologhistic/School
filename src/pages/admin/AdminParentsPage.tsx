@@ -29,7 +29,7 @@ export const AdminParentsPage: React.FC = () => {
       name: name.trim(),
       relation,
       contactDemo: contactDemo.trim(),
-      emailDemo: emailDemo.trim() || `${name.trim().toLowerCase().replace(/\s+/g, '.')}@demo.family.np`,
+      emailDemo: emailDemo.trim() || `${name.trim().toLowerCase().replace(/\s+/g, '.')}@family.sagarmathaacademy.edu.np`,
       occupation: occupation.trim() || 'Guardian',
       linkedStudentIds: linkedIds,
     });
@@ -43,7 +43,7 @@ export const AdminParentsPage: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <p className="text-sm text-slate-600">
-          Manage fictional parent/guardian accounts and linked child relationships.
+          Manage parent/guardian accounts and linked student relationships.
         </p>
         <button
           type="button"
@@ -51,7 +51,7 @@ export const AdminParentsPage: React.FC = () => {
           className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-[#0F2544] rounded-lg hover:bg-[#16345E] shrink-0"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Demo Parent</span>
+          <span>Add Parent</span>
         </button>
       </div>
 
@@ -62,7 +62,7 @@ export const AdminParentsPage: React.FC = () => {
               <th className="py-3 px-4">Guardian Name</th>
               <th className="py-3 px-4">Relation</th>
               <th className="py-3 px-4">Linked Children</th>
-              <th className="py-3 px-4">Demo Contact</th>
+              <th className="py-3 px-4">Contact Phone</th>
               <th className="py-3 px-4 text-right">Actions</th>
             </tr>
           </thead>
@@ -95,7 +95,7 @@ export const AdminParentsPage: React.FC = () => {
         </table>
       </div>
 
-      <ModalDialog open={modalOpen} onClose={() => setModalOpen(false)} title="Add Fictional Parent">
+      <ModalDialog open={modalOpen} onClose={() => setModalOpen(false)} title="Add Parent / Guardian">
         <form onSubmit={handleAdd} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -122,7 +122,7 @@ export const AdminParentsPage: React.FC = () => {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Demo Phone</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Contact Phone</label>
               <input
                 type="text"
                 value={contactDemo}
@@ -142,7 +142,7 @@ export const AdminParentsPage: React.FC = () => {
           </div>
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-              Link Demo Students
+              Link Students
             </label>
             <div className="grid grid-cols-2 gap-2 max-h-36 overflow-y-auto border border-slate-200 rounded-lg p-3">
               {state.students.map((stu) => (
@@ -180,7 +180,7 @@ export const AdminParentsPage: React.FC = () => {
         onClose={() => setDeleteTarget(null)}
         onConfirm={() => deleteTarget && state.deleteParent(deleteTarget.id)}
         title="Delete Parent Record"
-        message={`Remove "${deleteTarget?.name}" from local demo state?`}
+        message={`Remove "${deleteTarget?.name}" from parent records?`}
       />
     </div>
   );

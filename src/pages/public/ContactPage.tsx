@@ -44,7 +44,7 @@ export const ContactPage: React.FC = () => {
         <div className="text-xs font-medium text-[#2B548A]">School Administration Office</div>
         <h1 className="font-display text-3xl font-bold text-slate-900">Contact & Campus Location</h1>
         <p className="text-sm text-slate-600">
-          Reach our admissions and administrative desk. All details below are dynamically configurable in Admin Settings.
+          Reach our admissions and administrative desk during campus office hours.
         </p>
       </div>
 
@@ -100,16 +100,16 @@ export const ContactPage: React.FC = () => {
         <div className="lg:col-span-7 bg-white border border-slate-200 rounded-xl p-6 sm:p-8">
           <h2 className="font-display text-xl font-bold text-slate-900">Send an Inquiry</h2>
           <p className="text-xs text-slate-500 mt-1">
-            Client-side validated demo contact form. No real email or SMS is dispatched in this frontend MVP.
+            Have a question about admissions, curriculum, or campus visits? Send us a message below.
           </p>
 
           {sent && (
             <div className="mt-5 p-4 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 flex items-start gap-3">
               <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
               <div className="text-sm">
-                <div className="font-semibold">Demo Message Recorded</div>
+                <div className="font-semibold">Inquiry Recorded</div>
                 <p className="text-xs text-emerald-800 mt-0.5">
-                  Thank you for testing the contact form. Validation succeeded and your inquiry was saved in local demo state.
+                  Thank you for contacting our school office. Your inquiry has been saved for administrative review.
                 </p>
               </div>
             </div>

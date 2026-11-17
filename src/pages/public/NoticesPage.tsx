@@ -44,7 +44,7 @@ export const NoticesPage: React.FC = () => {
         <div className="text-xs font-medium text-[#2B548A]">Announcements & Circulars</div>
         <h1 className="font-display text-3xl font-bold text-slate-900">School Notices</h1>
         <p className="text-sm text-slate-600">
-          Official announcements, examination schedules, Dashain & Tihar vacation notices, and downloadable sample circulars.
+          Official announcements, examination schedules, Dashain & Tihar vacation notices, and downloadable official circulars.
         </p>
       </div>
 
@@ -175,7 +175,7 @@ export const NoticesPage: React.FC = () => {
                 className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-[#0F2544] rounded-lg hover:bg-[#16345E]"
               >
                 <Download className="w-3.5 h-3.5" />
-                <span>Download Sample PDF</span>
+                <span>Download Notice PDF</span>
               </button>
             </div>
           </div>

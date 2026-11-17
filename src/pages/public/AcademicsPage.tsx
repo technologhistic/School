@@ -2,7 +2,7 @@ import React from 'react';
 import { useSchoolStore } from '../../store/useSchoolStore';
 
 export const AcademicsPage: React.FC = () => {
-  const { subjects, classes, config } = useSchoolStore();
+  const { subjects, config } = useSchoolStore();
 
   const divisions = [
     {
@@ -94,23 +94,6 @@ export const AcademicsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Active Demo Classes */}
-      <section className="space-y-4">
-        <h2 className="font-display text-xl font-bold text-slate-900">Active Demo Class Sections</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          {classes.map((cls) => (
-            <div key={cls.id} className="bg-white border border-slate-200 rounded-xl p-5">
-              <div className="text-xs text-slate-500">{cls.room}</div>
-              <div className="font-display text-lg font-bold text-slate-900 mt-1">
-                {cls.grade} – Section {cls.section}
-              </div>
-              <div className="text-xs text-slate-600 mt-2 tabular-nums">
-                {cls.subjectIds.length} Subjects · Capacity {cls.capacity} students
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   );
 };

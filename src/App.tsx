@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { PublicLayout } from './layouts/PublicLayout';
 import { PortalLayout } from './layouts/PortalLayout';
+import { ProtectedPortalRoute } from './components/auth/ProtectedPortalRoute';
 
 // Public Pages
 import { HomePage } from './pages/public/HomePage';
@@ -77,8 +78,15 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
         </Route>
 
-        {/* Student Portal */}
-        <Route path="/student" element={<PortalLayout role="student" />}>
+        {/* Student Portal (Protected: student role + admin approval required) */}
+        <Route
+          path="/student"
+          element={
+            <ProtectedPortalRoute requiredRole="student">
+              <PortalLayout role="student" />
+            </ProtectedPortalRoute>
+          }
+        >
           <Route index element={<Navigate to="/student/dashboard" replace />} />
           <Route path="dashboard" element={<StudentDashboardPage />} />
           <Route path="profile" element={<StudentProfilePage />} />
@@ -89,8 +97,15 @@ export default function App() {
           <Route path="timetable" element={<StudentTimetablePage />} />
         </Route>
 
-        {/* Teacher Portal */}
-        <Route path="/teacher" element={<PortalLayout role="teacher" />}>
+        {/* Teacher Portal (Protected: admin-registered active teacher required) */}
+        <Route
+          path="/teacher"
+          element={
+            <ProtectedPortalRoute requiredRole="teacher">
+              <PortalLayout role="teacher" />
+            </ProtectedPortalRoute>
+          }
+        >
           <Route index element={<Navigate to="/teacher/dashboard" replace />} />
           <Route path="dashboard" element={<TeacherDashboardPage />} />
           <Route path="classes" element={<TeacherClassesPage />} />
@@ -109,8 +124,15 @@ export default function App() {
           <Route path="homework" element={<ParentHomeworkPage />} />
         </Route>
 
-        {/* Administrator Portal */}
-        <Route path="/admin" element={<PortalLayout role="admin" />}>
+        {/* Administrator Portal (Protected: verified authorized Google admin required) */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedPortalRoute requiredRole="admin">
+              <PortalLayout role="admin" />
+            </ProtectedPortalRoute>
+          }
+        >
           <Route index element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="dashboard" element={<AdminDashboardPage />} />
           <Route path="students" element={<AdminStudentsPage />} />

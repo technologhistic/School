@@ -58,7 +58,7 @@ export function computeLetterGrade(marks: number, maxMarks = 100): string {
 }
 
 export interface SchoolState {
-  // Preferences & Demo Session
+  // Preferences & Active Session
   activeRole: UserRole | null;
   activeStudentId: string;
   activeTeacherId: string;
@@ -402,7 +402,7 @@ export const useSchoolStore = create<SchoolState>()(
             {
               id: `ntf-${Date.now().toString(36)}`,
               role: 'admin',
-              title: 'New Demo Admission Inquiry',
+              title: 'New Admission Inquiry',
               message: `${created.applicantName} applied for ${created.grade}.`,
               date: '2026-11-17',
               read: false,

@@ -81,7 +81,7 @@ export const TeacherAttendancePage: React.FC = () => {
       {savedNotice && (
         <div className="p-3 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 text-xs flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-700" />
-          <span>Demo attendance updated in local state (reflected across Student & Parent portals).</span>
+          <span>Attendance updated and synced across Student &amp; Parent portals.</span>
         </div>
       )}
 

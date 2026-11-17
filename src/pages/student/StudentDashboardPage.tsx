@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { ArrowRight, BookOpen, Calendar, CheckSquare, ClipboardList } from 'lucide-react';
 import { useSchoolStore } from '../../store/useSchoolStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import {
   calculateAttendanceSummary,
   calculateTermAverage,
@@ -13,26 +14,32 @@ import { DateDisplay } from '../../components/common/DateDisplay';
 
 export const StudentDashboardPage: React.FC = () => {
   const state = useSchoolStore();
-  const student = state.students.find((s) => s.id === state.activeStudentId) ?? state.students[0];
+  const authUser = useAuthStore((s) => s.user);
+  const sampleStudent =
+    state.students.find((s) => s.id === (authUser?.id || state.activeStudentId)) ?? state.students[0];
 
-  if (!student) {
+  if (!sampleStudent) {
     return (
       <div className="bg-white border border-slate-200 rounded-xl p-8 text-center text-sm text-slate-600">
-        No demo student profile available. Reset demo data to restore defaults.
+        No student workspace records available.
       </div>
     );
   }
 
-  const studentAttendance = state.attendance.filter((a) => a.studentId === student.id);
+  const displayName = authUser?.fullName || sampleStudent.name;
+  const activeClassId = authUser?.classId || sampleStudent.classId;
+  const activeRollNumber = authUser?.rollNumber ?? sampleStudent.rollNumber;
+
+  const studentAttendance = state.attendance.filter((a) => a.studentId === sampleStudent.id);
   const attSummary = calculateAttendanceSummary(studentAttendance);
 
   const latestExam = state.exams[state.exams.length - 1];
   const latestResults = state.results.filter(
-    (r) => r.studentId === student.id && r.examId === latestExam?.id
+    (r) => r.studentId === sampleStudent.id && r.examId === latestExam?.id
   );
   const termAvg = calculateTermAverage(latestResults);
 
-  const classHomework = state.assignments.filter((a) => a.classId === student.classId);
+  const classHomework = state.assignments.filter((a) => a.classId === activeClassId);
   const pendingHomework = classHomework.filter((a) => a.status === 'pending');
 
   const chartData = latestResults.map((r) => {
@@ -52,13 +59,13 @@ export const StudentDashboardPage: React.FC = () => {
       <div className="bg-white border border-slate-200 rounded-xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="text-xs font-medium text-[#2B548A]">
-            {getClassLabel(state, student.classId)} · Roll No. {student.rollNumber}
+            {getClassLabel(state, activeClassId)} · Roll No. {activeRollNumber}
           </div>
           <h2 className="font-display text-xl font-bold text-slate-900 mt-1">
-            Welcome back, {student.name}
+            Welcome back, {displayName}
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            {state.config.activeTerm} · Sample student workspace
+            {state.config.activeTerm} · Registered Phone: {authUser?.phoneNumber || sampleStudent.phoneDemo}
           </p>
         </div>
         <Link
@@ -94,7 +101,7 @@ export const StudentDashboardPage: React.FC = () => {
             {termAvg.averagePct}%
           </div>
           <div className="text-xs text-slate-500 mt-1 tabular-nums">
-            Sample GPA {termAvg.gpa} / 4.00
+            GPA {termAvg.gpa} / 4.00
           </div>
         </div>
 
@@ -131,7 +138,7 @@ export const StudentDashboardPage: React.FC = () => {
               <h3 className="font-display text-base font-bold text-slate-900">
                 {latestExam?.name ?? 'Term Marks'} Overview
               </h3>
-              <p className="text-xs text-slate-500">Derived from current sample result records</p>
+              <p className="text-xs text-slate-500">Subject-wise performance breakdown</p>
             </div>
             <Link to="/student/results" className="text-xs font-semibold text-[#0F2544] hover:underline">
               Full Report

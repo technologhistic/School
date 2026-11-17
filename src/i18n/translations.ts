@@ -86,8 +86,8 @@ export const TRANSLATIONS: Record<LanguageCode, Dictionary> = {
       openGallery: 'View Full Gallery',
     },
     portal: {
-      demoBanner: 'Frontend Demo Workspace · Sample local data only',
-      resetDemo: 'Reset Demo Data',
+      demoBanner: 'School Digital Portal Workspace',
+      resetDemo: 'Restore Defaults',
       switchRole: 'Switch Role',
       publicSite: 'Public Website',
       notifications: 'Notifications',
@@ -134,8 +134,8 @@ export const TRANSLATIONS: Record<LanguageCode, Dictionary> = {
       openGallery: 'ग्यालेरी हेर्नुहोस्',
     },
     portal: {
-      demoBanner: 'डेमो कार्यक्षेत्र · नमुना स्थानीय डेटा मात्र',
-      resetDemo: 'डेटा रिसेट',
+      demoBanner: 'विद्यालय डिजिटल पोर्टल कार्यक्षेत्र',
+      resetDemo: 'पूर्वनिर्धारित सेटिङ',
       switchRole: 'भूमिका परिवर्तन',
       publicSite: 'मुख्य वेबसाइट',
       notifications: 'सूचनाहरू',

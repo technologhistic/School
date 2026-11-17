@@ -87,7 +87,7 @@ export const TeacherResultsPage: React.FC = () => {
       {savedStudent && (
         <div className="p-3 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 text-xs flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-700" />
-          <span>Saved sample marks for {savedStudent}.</span>
+          <span>Saved marks for {savedStudent}.</span>
         </div>
       )}
 

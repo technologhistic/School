@@ -1,6 +1,6 @@
 /**
  * Generates a valid, downloadable single-page PDF 1.4 document in client memory
- * for sample school notices, academic circulars, and fee/calendar bulletins.
+ * for school notices, academic circulars, and fee/calendar bulletins.
  */
 function escapePdfText(input: string): string {
   return input
@@ -75,7 +75,7 @@ export function downloadSampleNoticePdf(params: {
 
   ops.push('0 -24 Td');
   ops.push('/F1 9 Tf');
-  ops.push('(Generated locally as a sample demonstration document. Not an official signed record.) Tj');
+  ops.push('(Issued by School Administration Office.) Tj');
   ops.push('ET');
 
   const streamContent = ops.join('\n');

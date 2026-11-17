@@ -19,7 +19,7 @@ export const AdmissionsPage: React.FC = () => {
     const next: Record<string, string> = {};
     if (applicantName.trim().length < 2) next.applicantName = 'Enter the applicant full name.';
     if (guardianName.trim().length < 2) next.guardianName = 'Enter parent or guardian full name.';
-    if (!/^[+\d\s-]{7,18}$/.test(contactDemo.trim())) next.contactDemo = 'Enter a valid demo contact number.';
+    if (!/^[+\d\s-]{7,18}$/.test(contactDemo.trim())) next.contactDemo = 'Enter a valid contact number.';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailDemo.trim())) next.emailDemo = 'Enter a valid email address.';
     if (previousSchool.trim().length < 2) next.previousSchool = 'Enter previous school or "First Enrollment".';
     setErrors(next);
@@ -55,10 +55,10 @@ export const AdmissionsPage: React.FC = () => {
           Admissions Open · {config.academicYearBS} ({config.academicYearAD})
         </div>
         <h1 className="font-display text-3xl font-bold text-slate-900">
-          Admissions Process & Demo Inquiry Form
+          Admissions Process & Inquiry Form
         </h1>
         <p className="text-base text-slate-600 leading-relaxed">
-          Learn how prospective families join {config.schoolName}. Note: this form validates client-side and saves a fictional demo inquiry into local browser state for review inside the Admin Portal.
+          Learn how prospective families join {config.schoolName} and submit an admission inquiry for review by our administrative office.
         </p>
       </div>
 
@@ -97,20 +97,20 @@ export const AdmissionsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Validated Demo Form */}
+        {/* Validated Form */}
         <div className="lg:col-span-7 bg-white border border-slate-200 rounded-xl p-6 sm:p-8">
-          <h2 className="font-display text-xl font-bold text-slate-900">Demo Admission Inquiry</h2>
+          <h2 className="font-display text-xl font-bold text-slate-900">Admission Inquiry</h2>
           <p className="text-xs text-slate-500 mt-1">
-            Use fictional sample details only. Do not submit real personal student records.
+            Complete the student and parent/guardian details below to request an admissions review.
           </p>
 
           {submittedRef && (
             <div className="mt-5 p-4 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 flex items-start gap-3">
               <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
               <div className="text-sm">
-                <div className="font-semibold">Demo Inquiry Recorded ({submittedRef})</div>
+                <div className="font-semibold">Admission Inquiry Recorded ({submittedRef})</div>
                 <p className="text-xs mt-1 text-emerald-800">
-                  Saved in local demo state (no real email sent). Open the Administrator Portal &gt; Admissions to review and update its status.
+                  Your inquiry has been submitted to the admissions office for review.
                 </p>
               </div>
             </div>
@@ -120,7 +120,7 @@ export const AdmissionsPage: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="adm-student" className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Student Full Name (Fictional) *
+                  Student Full Name *
                 </label>
                 <input
                   id="adm-student"
@@ -182,7 +182,7 @@ export const AdmissionsPage: React.FC = () => {
 
               <div>
                 <label htmlFor="adm-phone" className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Demo Contact Number *
+                  Contact Number *
                 </label>
                 <input
                   id="adm-phone"
@@ -199,14 +199,14 @@ export const AdmissionsPage: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="adm-email" className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Demo Email Address *
+                  Email Address *
                 </label>
                 <input
                   id="adm-email"
                   type="email"
                   value={emailDemo}
                   onChange={(e) => setEmailDemo(e.target.value)}
-                  placeholder="guardian@demo.example.np"
+                  placeholder="guardian@example.edu.np"
                   className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-[#0F2544]"
                 />
                 {errors.emailDemo && <p className="text-xs text-red-600 mt-1">{errors.emailDemo}</p>}
@@ -246,7 +246,7 @@ export const AdmissionsPage: React.FC = () => {
               type="submit"
               className="px-5 py-2.5 text-sm font-semibold text-white bg-[#0F2544] rounded-lg hover:bg-[#16345E] transition-colors"
             >
-              Submit Demo Application
+              Submit Application
             </button>
           </form>
         </div>

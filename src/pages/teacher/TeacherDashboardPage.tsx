@@ -3,19 +3,27 @@ import { Link } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { BookOpen, CheckSquare, ClipboardList, Users } from 'lucide-react';
 import { useSchoolStore } from '../../store/useSchoolStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { getClassLabel, getSubjectName } from '../../services/schoolService';
 import { DateDisplay } from '../../components/common/DateDisplay';
 
 export const TeacherDashboardPage: React.FC = () => {
   const state = useSchoolStore();
-  const teacher = state.teachers.find((t) => t.id === state.activeTeacherId) ?? state.teachers[0];
+  const authUser = useAuthStore((s) => s.user);
+  const sampleTeacher =
+    state.teachers.find((t) => t.id === (authUser?.id || state.activeTeacherId)) ?? state.teachers[0];
 
-  const assignedClasses = state.classes.filter((c) => teacher?.classIds.includes(c.id));
+  const activeClassIds =
+    authUser?.classes && authUser.classes.length > 0
+      ? authUser.classes
+      : sampleTeacher?.classIds ?? [];
+
+  const assignedClasses = state.classes.filter((c) => activeClassIds.includes(c.id));
   const assignedStudents = state.students.filter((s) =>
     assignedClasses.some((c) => c.id === s.classId)
   );
-  const myAssignments = state.assignments.filter((a) => a.teacherId === teacher?.id);
-  const mySchedule = state.timetable.filter((t) => t.teacherId === teacher?.id);
+  const myAssignments = state.assignments.filter((a) => a.teacherId === sampleTeacher?.id);
+  const mySchedule = state.timetable.filter((t) => t.teacherId === sampleTeacher?.id);
 
   const attendanceChartData = assignedClasses.map((cls) => {
     const clsRecords = state.attendance.filter((a) => a.classId === cls.id);
@@ -27,18 +35,21 @@ export const TeacherDashboardPage: React.FC = () => {
     };
   });
 
+  const displayName = authUser?.fullName || sampleTeacher?.name;
+  const displayDept = authUser?.department || sampleTeacher?.department;
+
   return (
     <div className="space-y-6">
       <div className="bg-white border border-slate-200 rounded-xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="text-xs font-medium text-[#2B548A]">
-            {teacher?.designation} · {teacher?.department}
+            Faculty · {displayDept}
           </div>
           <h2 className="font-display text-xl font-bold text-slate-900 mt-1">
-            {teacher?.name}
+            {displayName}
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            {state.config.activeTerm} · Sample faculty workspace
+            {state.config.activeTerm} · Registered Phone: {authUser?.phoneNumber || sampleTeacher?.phoneDemo}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2.5">
@@ -109,7 +120,7 @@ export const TeacherDashboardPage: React.FC = () => {
           <h3 className="font-display text-base font-bold text-slate-900 mb-1">
             Attendance Rate by Assigned Class
           </h3>
-          <p className="text-xs text-slate-500 mb-4">Calculated from recorded sample attendance</p>
+          <p className="text-xs text-slate-500 mb-4">Calculated from recorded class attendance</p>
           <div className="h-56 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={attendanceChartData} margin={{ top: 8, right: 12, left: -16, bottom: 0 }}>

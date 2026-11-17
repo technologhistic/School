@@ -90,7 +90,7 @@ export const TeachersPage: React.FC = () => {
               >
                 <div>
                   <div className="text-xs text-slate-500">
-                    {teacher.department} · {teacher.experienceYears} yrs experience
+                    {teacher.department}
                   </div>
                   <h2 className="font-display text-lg font-bold text-slate-900 mt-1">
                     {teacher.name}

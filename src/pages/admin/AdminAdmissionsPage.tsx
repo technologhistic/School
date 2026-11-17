@@ -35,7 +35,7 @@ export const AdminAdmissionsPage: React.FC = () => {
       <DataStateShell
         isEmpty={filtered.length === 0}
         emptyTitle="No admission applications in this status"
-        emptyDescription="Submit a demo application from the public Admissions page or switch filters."
+        emptyDescription="Submit an application from the public Admissions page or switch filters."
         emptyActionLabel="Show All"
         onEmptyAction={() => setFilter('all')}
       >

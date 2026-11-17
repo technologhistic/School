@@ -43,7 +43,7 @@ export const StudentResultsPage: React.FC = () => {
 
         {exam && (
           <div className="text-xs text-slate-500">
-            Sample Assessment Date: <DateDisplay date={exam.dateAD} />
+            Assessment Date: <DateDisplay date={exam.dateAD} />
           </div>
         )}
       </div>
@@ -51,7 +51,7 @@ export const StudentResultsPage: React.FC = () => {
       {/* Term Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white border border-slate-200 rounded-xl p-5">
-          <div className="text-xs text-slate-500">Total Sample Score</div>
+          <div className="text-xs text-slate-500">Total Score</div>
           <div className="font-display text-2xl font-bold text-slate-900 tabular-nums mt-1">
             {summary.totalMarks} / {summary.totalMax}
           </div>
@@ -63,7 +63,7 @@ export const StudentResultsPage: React.FC = () => {
           </div>
         </div>
         <div className="bg-white border border-slate-200 rounded-xl p-5">
-          <div className="text-xs text-slate-500">Sample GPA</div>
+          <div className="text-xs text-slate-500">GPA</div>
           <div className="font-display text-2xl font-bold text-slate-900 tabular-nums mt-1">
             {summary.gpa}
           </div>
@@ -72,8 +72,8 @@ export const StudentResultsPage: React.FC = () => {
 
       <DataStateShell
         isEmpty={examResults.length === 0}
-        emptyTitle="No sample marks published for this term"
-        emptyDescription="Select another examination tab or have a teacher enter sample marks in the Teacher Portal."
+        emptyTitle="No marks published for this term"
+        emptyDescription="Select another examination tab or check back once marks are published."
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-7 bg-white border border-slate-200 rounded-xl overflow-x-auto">

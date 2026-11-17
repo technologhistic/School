@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeftRight,
   Bell,
   BookOpen,
   Calendar,
@@ -13,9 +12,10 @@ import {
   Globe,
   GraduationCap,
   Home,
+  KeyRound,
   LayoutDashboard,
+  LogOut,
   Menu,
-  RotateCcw,
   Settings,
   User,
   UserCheck,
@@ -24,9 +24,10 @@ import {
 } from 'lucide-react';
 import { UserRole } from '../types/school';
 import { useSchoolStore } from '../store/useSchoolStore';
+import { useAuthStore } from '../store/useAuthStore';
 import { TRANSLATIONS } from '../i18n/translations';
 import { SchoolCrest } from '../components/common/SchoolArtwork';
-import { ConfirmDialog } from '../components/common/ModalDialog';
+import { ModalDialog } from '../components/common/ModalDialog';
 import { formatSchoolDate } from '../utils/bsDate';
 
 interface NavItem {
@@ -83,7 +84,7 @@ const ROLE_CONFIG: Record<
     accentBg: 'bg-[#09182E]',
     nav: [
       { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-      { to: '/admin/students', label: 'Students', icon: Users },
+      { to: '/admin/students', label: 'Students & Approvals', icon: Users },
       { to: '/admin/teachers', label: 'Teachers', icon: UserCheck },
       { to: '/admin/parents', label: 'Parents', icon: User },
       { to: '/admin/classes', label: 'Classes & Subjects', icon: BookOpen },
@@ -104,37 +105,65 @@ export const PortalLayout: React.FC<{ role: UserRole }> = ({ role }) => {
     notifications,
     markNotificationRead,
     markAllNotificationsRead,
-    resetDemoData,
-    students,
-    teachers,
-    parents,
-    activeStudentId,
-    activeTeacherId,
-    activeParentId,
   } = useSchoolStore();
 
+  const { user: authUser, logout } = useAuthStore();
+  const navigate = useNavigate();
   const t = TRANSLATIONS[language];
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
-  const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
+  const [pwdModalOpen, setPwdModalOpen] = useState(false);
+
+  const [currPwd, setCurrPwd] = useState('');
+  const [newPwd, setNewPwd] = useState('');
+  const [pwdError, setPwdError] = useState('');
+  const [pwdSuccess, setPwdSuccess] = useState('');
 
   const roleMeta = ROLE_CONFIG[role];
   const roleNotifications = notifications.filter((n) => n.role === role || n.role === 'all');
   const unreadCount = roleNotifications.filter((n) => !n.read).length;
 
   const activeUserName =
-    role === 'student'
-      ? students.find((s) => s.id === activeStudentId)?.name ?? 'Demo Student'
-      : role === 'teacher'
-      ? teachers.find((tch) => tch.id === activeTeacherId)?.name ?? 'Demo Teacher'
-      : role === 'parent'
-      ? parents.find((p) => p.id === activeParentId)?.name ?? 'Demo Parent'
-      : 'Prakash Gurung (Admin)';
+    authUser?.fullName || authUser?.email || roleMeta.portalLabel;
 
   const currentNav = roleMeta.nav.find((n) => location.pathname.startsWith(n.to));
   const pageTitle = currentNav?.label ?? roleMeta.portalLabel;
   const isNested = currentNav && currentNav.to !== `/${role}/dashboard`;
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwdError('');
+    setPwdSuccess('');
+    if (newPwd.length < 6) {
+      setPwdError('New password must be at least 6 characters.');
+      return;
+    }
+    const endpoint =
+      role === 'teacher'
+        ? '/api/v1/auth/teacher/change-password'
+        : '/api/v1/auth/student/change-password';
+
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ currentPassword: currPwd, newPassword: newPwd }),
+    });
+    const data = (await res.json()) as { error?: string };
+    if (!res.ok) {
+      setPwdError(data.error || 'Could not change password.');
+      return;
+    }
+    setPwdSuccess('Password updated successfully.');
+    setCurrPwd('');
+    setNewPwd('');
+  };
 
   const SidebarContent = (
     <div className="flex flex-col h-full bg-white border-r border-slate-200">
@@ -159,8 +188,13 @@ export const PortalLayout: React.FC<{ role: UserRole }> = ({ role }) => {
       </div>
 
       <div className="px-4 py-3 border-b border-slate-100 bg-slate-50/70">
-        <div className="text-xs text-slate-500">Demo Account</div>
+        <div className="text-xs text-slate-500">Authenticated Session</div>
         <div className="text-sm font-semibold text-slate-900 truncate mt-0.5">{activeUserName}</div>
+        {(authUser?.email || authUser?.phoneNumber) && (
+          <div className="text-[11px] font-mono text-slate-500 truncate mt-0.5">
+            {authUser.email || authUser.phoneNumber}
+          </div>
+        )}
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto" aria-label={`${roleMeta.portalLabel} navigation`}>
@@ -187,13 +221,20 @@ export const PortalLayout: React.FC<{ role: UserRole }> = ({ role }) => {
       </nav>
 
       <div className="p-3 border-t border-slate-200 space-y-1.5">
-        <Link
-          to="/login"
-          className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-700 rounded-lg hover:bg-slate-100 transition-colors"
-        >
-          <ArrowLeftRight className="w-3.5 h-3.5 text-slate-500" />
-          <span>{t.portal.switchRole}</span>
-        </Link>
+        {(role === 'teacher' || role === 'student') && (
+          <button
+            type="button"
+            onClick={() => {
+              setPwdError('');
+              setPwdSuccess('');
+              setPwdModalOpen(true);
+            }}
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-700 rounded-lg hover:bg-slate-100 transition-colors text-left"
+          >
+            <KeyRound className="w-3.5 h-3.5 text-slate-500" />
+            <span>Change Password</span>
+          </button>
+        )}
         <Link
           to="/"
           className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-700 rounded-lg hover:bg-slate-100 transition-colors"
@@ -203,11 +244,11 @@ export const PortalLayout: React.FC<{ role: UserRole }> = ({ role }) => {
         </Link>
         <button
           type="button"
-          onClick={() => setResetConfirmOpen(true)}
-          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-700 rounded-lg hover:bg-slate-100 transition-colors text-left"
+          onClick={() => void handleLogout()}
+          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-red-700 rounded-lg hover:bg-red-50 transition-colors text-left"
         >
-          <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
-          <span>{t.portal.resetDemo}</span>
+          <LogOut className="w-3.5 h-3.5" />
+          <span>Sign Out</span>
         </button>
       </div>
     </div>
@@ -215,12 +256,10 @@ export const PortalLayout: React.FC<{ role: UserRole }> = ({ role }) => {
 
   return (
     <div className="min-h-screen flex bg-[#F6F7F9] text-slate-900">
-      {/* Desktop Fixed Sidebar */}
       <aside className="hidden lg:block w-64 shrink-0 sticky top-0 h-screen">
         {SidebarContent}
       </aside>
 
-      {/* Mobile Drawer Sidebar */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
           <div
@@ -232,9 +271,7 @@ export const PortalLayout: React.FC<{ role: UserRole }> = ({ role }) => {
         </div>
       )}
 
-      {/* Main Portal Workspace */}
       <div className="flex-1 min-w-0 flex flex-col">
-        {/* Top Portal Bar */}
         <header className="sticky top-0 z-30 bg-white border-b border-slate-200 px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <button
@@ -255,7 +292,7 @@ export const PortalLayout: React.FC<{ role: UserRole }> = ({ role }) => {
                   <span className="text-slate-900 font-medium truncate">{pageTitle}</span>
                 </nav>
               ) : (
-                <div className="text-xs text-slate-500 truncate">{t.portal.demoBanner}</div>
+                <div className="text-xs text-slate-500 truncate">{roleMeta.portalLabel}</div>
               )}
               <h1 className="font-display text-base sm:text-lg font-bold text-slate-900 truncate">
                 {pageTitle}
@@ -264,7 +301,6 @@ export const PortalLayout: React.FC<{ role: UserRole }> = ({ role }) => {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            {/* Calendar Mode Toggle */}
             <button
               type="button"
               onClick={() => setCalendarMode(calendarMode === 'BS' ? 'AD' : 'BS')}
@@ -275,7 +311,6 @@ export const PortalLayout: React.FC<{ role: UserRole }> = ({ role }) => {
               <span className="tabular-nums">{calendarMode}</span>
             </button>
 
-            {/* Language Switch */}
             <button
               type="button"
               onClick={() => setLanguage(language === 'en' ? 'np' : 'en')}
@@ -286,7 +321,6 @@ export const PortalLayout: React.FC<{ role: UserRole }> = ({ role }) => {
               <span>{language === 'en' ? 'EN' : 'नेपाली'}</span>
             </button>
 
-            {/* Notifications Popover */}
             <div className="relative">
               <button
                 type="button"
@@ -363,14 +397,60 @@ export const PortalLayout: React.FC<{ role: UserRole }> = ({ role }) => {
         </main>
       </div>
 
-      <ConfirmDialog
-        open={resetConfirmOpen}
-        onClose={() => setResetConfirmOpen(false)}
-        onConfirm={resetDemoData}
-        title="Reset Demo Data"
-        message="This will restore all fictional students, attendance marks, homework assignments, results, notices, admissions, and school settings to their initial default values."
-        confirmLabel="Reset to Defaults"
-      />
+      <ModalDialog
+        open={pwdModalOpen}
+        onClose={() => setPwdModalOpen(false)}
+        title="Change Account Password"
+      >
+        <form onSubmit={handlePasswordChange} className="space-y-4">
+          {pwdError && (
+            <div className="p-3 rounded-lg border border-red-200 bg-red-50 text-xs text-red-800">
+              {pwdError}
+            </div>
+          )}
+          {pwdSuccess && (
+            <div className="p-3 rounded-lg border border-emerald-200 bg-emerald-50 text-xs text-emerald-900">
+              {pwdSuccess}
+            </div>
+          )}
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Current Password</label>
+            <input
+              type="password"
+              value={currPwd}
+              onChange={(e) => setCurrPwd(e.target.value)}
+              required
+              className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">New Password (min 6 chars)</label>
+            <input
+              type="password"
+              value={newPwd}
+              onChange={(e) => setNewPwd(e.target.value)}
+              required
+              minLength={6}
+              className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setPwdModalOpen(false)}
+              className="px-4 py-2 text-xs font-semibold text-slate-700 border border-slate-200 rounded-lg"
+            >
+              Close
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 text-xs font-semibold text-white bg-[#0F2544] rounded-lg"
+            >
+              Update Password
+            </button>
+          </div>
+        </form>
+      </ModalDialog>
     </div>
   );
 };

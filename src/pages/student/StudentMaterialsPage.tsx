@@ -28,7 +28,7 @@ export const StudentMaterialsPage: React.FC = () => {
       <DataStateShell
         isEmpty={materials.length === 0}
         emptyTitle="No study materials uploaded"
-        emptyDescription="Teachers can add demo study resources from the Teacher Portal."
+        emptyDescription="Teachers can add study resources from the Teacher Portal."
       >
         <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-200">
           {materials.map((mat) => (
@@ -98,7 +98,7 @@ export const StudentMaterialsPage: React.FC = () => {
               {preview.summary}
             </div>
             <div className="text-xs text-slate-500">
-              Shared by {getTeacherName(state, preview.teacherId)} · Size {preview.fileSize} (Demo preview placeholder)
+              Shared by {getTeacherName(state, preview.teacherId)} · Size {preview.fileSize}
             </div>
           </div>
         )}

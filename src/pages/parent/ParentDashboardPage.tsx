@@ -22,7 +22,7 @@ export const ParentDashboardPage: React.FC = () => {
   if (!child) {
     return (
       <div className="bg-white border border-slate-200 rounded-xl p-8 text-center text-sm text-slate-600">
-        No linked demo children found. Use Admin &gt; Parents or Reset Demo Data.
+        No linked student records found for this guardian account.
       </div>
     );
   }
@@ -48,7 +48,7 @@ export const ParentDashboardPage: React.FC = () => {
       <div className="bg-white border border-slate-200 rounded-xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="text-xs font-medium text-[#2B548A]">
-            Guardian: {parent?.name} · Reviewing Sample Child Record
+            Guardian: {parent?.name} · Student Progress Overview
           </div>
           <h2 className="font-display text-xl font-bold text-slate-900 mt-1">
             {child.name} — {getClassLabel(state, child.classId)}
@@ -91,7 +91,7 @@ export const ParentDashboardPage: React.FC = () => {
           <div className="font-display text-2xl font-bold text-slate-900 tabular-nums mt-1">
             {termAvg.averagePct}%
           </div>
-          <div className="text-xs text-slate-500 mt-1 tabular-nums">Sample GPA {termAvg.gpa}</div>
+          <div className="text-xs text-slate-500 mt-1 tabular-nums">GPA {termAvg.gpa}</div>
         </div>
 
         <div className="bg-white border border-slate-200 rounded-xl p-5">

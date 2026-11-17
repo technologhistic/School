@@ -11,7 +11,7 @@ import { formatSchoolDate } from '../../utils/bsDate';
 import { GalleryItem, Notice } from '../../types/school';
 
 export const HomePage: React.FC = () => {
-  const { config, language, calendarMode, notices, events, gallery, students, teachers, classes } =
+  const { config, language, calendarMode, notices, events, gallery } =
     useSchoolStore();
   const t = TRANSLATIONS[language];
 
@@ -92,22 +92,22 @@ export const HomePage: React.FC = () => {
               </Link>
             </div>
 
-            <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
-                { label: 'Est. Year', value: '2055 BS', sub: '1998 AD' },
-                { label: 'Demo Students', value: String(students.length), sub: 'Active Roster' },
-                { label: 'Faculty Members', value: String(teachers.length), sub: 'Full-Time Leads' },
-                { label: 'Active Sections', value: String(classes.length), sub: 'Grades 6–10 Demo' },
-              ].map((stat) => (
+                { label: 'Academic Divisions', value: 'Grades 1 – 12', sub: 'Primary, Secondary & +2 Streams' },
+                { label: 'Curriculum Track', value: 'NEB & National', sub: 'Science & Management Streams' },
+                { label: 'Academic Calendar', value: 'BS & AD Dates', sub: 'Dual Calendar Synchronized' },
+                { label: 'Digital Portals', value: '3 Role Workspaces', sub: 'Admin, Teacher & Student' },
+              ].map((item) => (
                 <div
-                  key={stat.label}
+                  key={item.label}
                   className="bg-white border border-slate-200 rounded-xl p-5"
                 >
-                  <div className="text-xs text-slate-500">{stat.label}</div>
-                  <div className="font-display text-2xl font-bold text-[#0F2544] tabular-nums mt-1">
-                    {stat.value}
+                  <div className="text-xs text-slate-500">{item.label}</div>
+                  <div className="font-display text-lg font-bold text-[#0F2544] mt-1">
+                    {item.value}
                   </div>
-                  <div className="text-xs text-slate-500 mt-1">{stat.sub}</div>
+                  <div className="text-xs text-slate-500 mt-1">{item.sub}</div>
                 </div>
               ))}
             </div>
@@ -172,7 +172,7 @@ export const HomePage: React.FC = () => {
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-slate-600">
               <span className="inline-flex items-center gap-1.5">
                 <BookOpen className="w-4 h-4 text-[#0F2544]" />
-                11,400-volume reference library
+                Reference library & reading hall
               </span>
               <span>Physics, Chemistry & Computing labs</span>
               <span>Outdoor basketball & athletics ground</span>
@@ -302,23 +302,7 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 6. Principal's Message */}
-      <section className="py-14 bg-[#0F2544] text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl space-y-4">
-            <div className="text-xs font-medium text-slate-300">{t.sections.principalTitle}</div>
-            <blockquote className="font-display text-xl sm:text-2xl font-medium leading-relaxed text-white">
-              “{config.principalMessage}”
-            </blockquote>
-            <div className="pt-2 text-sm">
-              <div className="font-semibold text-white">{config.principalName}</div>
-              <div className="text-slate-300 text-xs">{config.principalTitle}</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Gallery Preview */}
+      {/* 6. Gallery Preview */}
       <section className="py-14 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between gap-4 mb-8">
@@ -393,7 +377,7 @@ export const HomePage: React.FC = () => {
                 className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-white bg-[#0F2544] rounded-lg hover:bg-[#16345E] transition-colors"
               >
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Start Demo Application</span>
+                <span>Apply for Admission</span>
               </Link>
             </div>
           </div>

@@ -6,21 +6,21 @@ export const FacilitiesPage: React.FC = () => {
     {
       title: 'Central Reference Library & Quiet Reading Hall',
       type: 'library' as const,
-      meta: 'Block A, Ground Floor · 11,400+ Books',
+      meta: 'Block A, Ground Floor',
       description:
         'Open from 8:30 AM to 4:30 PM with dedicated Grade 1–5 picture book corners, NEB reference archives, and periodicals in English and Nepali.',
     },
     {
       title: 'Integrated Physics, Chemistry & Biology Labs',
       type: 'science' as const,
-      meta: 'Block B, Second Floor · 36 Workstations',
+      meta: 'Block B, Second Floor',
       description:
         'Equipped with optical benches, fume-safe titration stations, compound microscopes, and safety gear for Grades 6 through +2 Science practicums.',
     },
     {
       title: 'Computer Science & Digital Literacy Lab',
       type: 'campus' as const,
-      meta: 'Block B, First Floor · 40 Workstations',
+      meta: 'Block B, First Floor',
       description:
         'Structured programming workstations supporting Python, web fundamentals, spreadsheet modeling, and supervised internet research.',
     },
@@ -34,7 +34,7 @@ export const FacilitiesPage: React.FC = () => {
     {
       title: 'Multi-Purpose Assembly & Performing Arts Hall',
       type: 'assembly' as const,
-      meta: 'Central Wing · 450-Seat Capacity',
+      meta: 'Central Wing · Main Auditorium',
       description:
         'Acoustically treated auditorium for science exhibitions, inter-house debates, Dashain/Tihar assemblies, and parent orientations.',
     },

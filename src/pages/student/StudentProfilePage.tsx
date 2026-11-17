@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { useSchoolStore } from '../../store/useSchoolStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { getClassLabel } from '../../services/schoolService';
 import { DateDisplay } from '../../components/common/DateDisplay';
 
 export const StudentProfilePage: React.FC = () => {
   const state = useSchoolStore();
-  const student = state.students.find((s) => s.id === state.activeStudentId) ?? state.students[0];
+  const authUser = useAuthStore((s) => s.user);
+  const student =
+    state.students.find((s) => s.id === (authUser?.id || state.activeStudentId)) ?? state.students[0];
 
   const [emailDemo, setEmailDemo] = useState(student?.emailDemo ?? '');
-  const [phoneDemo, setPhoneDemo] = useState(student?.phoneDemo ?? '');
+  const [phoneDemo, setPhoneDemo] = useState(authUser?.phoneNumber ?? student?.phoneDemo ?? '');
   const [addressDemo, setAddressDemo] = useState(student?.addressDemo ?? '');
   const [guardianName, setGuardianName] = useState(student?.guardianName ?? '');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -17,11 +20,15 @@ export const StudentProfilePage: React.FC = () => {
 
   if (!student) return null;
 
+  const displayName = authUser?.fullName || student.name;
+  const activeClassId = authUser?.classId || student.classId;
+  const activeRollNumber = authUser?.rollNumber ?? student.rollNumber;
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     const next: Record<string, string> = {};
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailDemo.trim())) next.emailDemo = 'Enter a valid demo email address.';
-    if (!/^[+\d\s-]{7,18}$/.test(phoneDemo.trim())) next.phoneDemo = 'Enter a valid demo contact number.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailDemo.trim())) next.emailDemo = 'Enter a valid email address.';
+    if (!/^[+\d\s-]{7,18}$/.test(phoneDemo.trim())) next.phoneDemo = 'Enter a valid contact number.';
     if (addressDemo.trim().length < 4) next.addressDemo = 'Enter a valid local address.';
     if (guardianName.trim().length < 2) next.guardianName = 'Enter guardian name.';
     setErrors(next);
@@ -42,9 +49,9 @@ export const StudentProfilePage: React.FC = () => {
       <div className="bg-white border border-slate-200 rounded-xl p-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
           <div>
-            <h2 className="font-display text-xl font-bold text-slate-900">{student.name}</h2>
+            <h2 className="font-display text-xl font-bold text-slate-900">{displayName}</h2>
             <p className="text-sm text-slate-600 mt-0.5">
-              {getClassLabel(state, student.classId)} · Roll No. {student.rollNumber}
+              {getClassLabel(state, activeClassId)} · Roll No. {activeRollNumber}
             </p>
           </div>
           <div className="text-xs text-slate-500">
@@ -55,7 +62,7 @@ export const StudentProfilePage: React.FC = () => {
         {saved && (
           <div className="mt-5 p-3.5 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 text-xs flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-700" />
-            <span>Demo profile fields updated in local state.</span>
+            <span>Student profile fields updated.</span>
           </div>
         )}
 
@@ -63,7 +70,7 @@ export const StudentProfilePage: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="stu-email" className="block text-xs font-semibold text-slate-700 mb-1.5">
-                Demo Student Email *
+                Student Email *
               </label>
               <input
                 id="stu-email"
@@ -77,7 +84,7 @@ export const StudentProfilePage: React.FC = () => {
 
             <div>
               <label htmlFor="stu-phone" className="block text-xs font-semibold text-slate-700 mb-1.5">
-                Demo Contact Number *
+                Contact Number *
               </label>
               <input
                 id="stu-phone"

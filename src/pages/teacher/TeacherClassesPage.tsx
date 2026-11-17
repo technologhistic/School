@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import { useSchoolStore } from '../../store/useSchoolStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { getSubjectName } from '../../services/schoolService';
 
 export const TeacherClassesPage: React.FC = () => {
   const state = useSchoolStore();
-  const teacher = state.teachers.find((t) => t.id === state.activeTeacherId) ?? state.teachers[0];
-  const assignedClasses = state.classes.filter((c) => teacher?.classIds.includes(c.id));
+  const authUser = useAuthStore((s) => s.user);
+  const teacher =
+    state.teachers.find((t) => t.id === (authUser?.id || state.activeTeacherId)) ?? state.teachers[0];
+  const activeClassIds =
+    authUser?.classes && authUser.classes.length > 0
+      ? authUser.classes
+      : teacher?.classIds ?? [];
+  const assignedClasses = state.classes.filter((c) => activeClassIds.includes(c.id));
 
   const [selectedClassId, setSelectedClassId] = useState(assignedClasses[0]?.id ?? '');
   const activeClass = assignedClasses.find((c) => c.id === selectedClassId) ?? assignedClasses[0];
@@ -44,7 +51,7 @@ export const TeacherClassesPage: React.FC = () => {
               <p className="text-xs text-slate-500">{activeClass.room}</p>
             </div>
             <div className="text-xs font-medium text-slate-600 tabular-nums">
-              {roster.length} enrolled demo students
+              {roster.length} enrolled students
             </div>
           </div>
 
@@ -55,7 +62,7 @@ export const TeacherClassesPage: React.FC = () => {
                   <th className="py-3 px-4">Roll No.</th>
                   <th className="py-3 px-4">Student Name</th>
                   <th className="py-3 px-4">Guardian</th>
-                  <th className="py-3 px-4">Demo Email</th>
+                  <th className="py-3 px-4">Email</th>
                   <th className="py-3 px-4">Status</th>
                 </tr>
               </thead>

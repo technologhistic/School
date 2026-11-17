@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { CheckCircle2, RotateCcw } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import { useSchoolStore } from '../../store/useSchoolStore';
-import { ConfirmDialog } from '../../components/common/ModalDialog';
 
 export const AdminSettingsPage: React.FC = () => {
-  const { config, updateConfig, resetDemoData } = useSchoolStore();
+  const { config, updateConfig } = useSchoolStore();
   const [form, setForm] = useState(config);
   const [saved, setSaved] = useState(false);
-  const [resetOpen, setResetOpen] = useState(false);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,14 +26,6 @@ export const AdminSettingsPage: React.FC = () => {
               Changes made here immediately update the public website header, About page, Contact details, and footer.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => setResetOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-red-700 border border-red-200 rounded-lg hover:bg-red-50 self-start"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Reset Demo Data</span>
-          </button>
         </div>
 
         {saved && (
@@ -176,17 +166,6 @@ export const AdminSettingsPage: React.FC = () => {
         </form>
       </div>
 
-      <ConfirmDialog
-        open={resetOpen}
-        onClose={() => setResetOpen(false)}
-        onConfirm={() => {
-          resetDemoData();
-          setForm(useSchoolStore.getState().config);
-        }}
-        title="Reset All Demo Data"
-        message="Restore all students, teachers, attendance, marks, notices, admissions, and school settings to initial defaults?"
-        confirmLabel="Reset Everything"
-      />
     </div>
   );
 };
