@@ -1,0 +1,6 @@
+{
+  "name": "Sagarmatha Valley Academy — School Management Platform",
+  "description": "Modern public school website and role-oriented student, teacher, parent, and administrator portals with bilingual EN/NP and AD/BS calendar support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
